@@ -1,0 +1,16 @@
+#!/bin/bash
+NEW_VERSION=$1
+CURRENT_VERSION=$(php -v | tail -r | tail -n 1 | cut -d " " -f 2 | cut -c 1-3)
+
+if [ -z "${NEW_VERSION}" ]; then
+	echo "Please provide the new php version as the first argument"
+	exit 128
+fi
+
+NEW_VERSION=php${NEW_VERSION//.}
+CURRENT_VERSION=php${CURRENT_VERSION//.}
+
+sudo brew services stop $CURRENT_VERSION
+brew unlink $CURRENT_VERSION
+brew link $NEW_VERSION
+valet install
