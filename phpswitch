@@ -13,6 +13,11 @@ NEW_VERSION=$( echo $NEW_VERSION | awk '{print tolower($0)}')
 NEW_VERSION=${NEW_VERSION#"php"}
 NEW_VERSION=php${NEW_VERSION//.}
 
+if [[ ! " ${PHP_VERSIONS[@]} " =~ " ${NEW_VERSION} " ]]; then
+	echo "Only the following php versions are supported by Valet: "$(printf "%s " "${PHP_VERSIONS[@]}")
+	exit 128
+fi
+
 # Stop and unlink all php versions
 echo "Stopping all php services"
 for PHP_VERSION in "${PHP_VERSIONS[@]}"
