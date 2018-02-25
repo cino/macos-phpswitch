@@ -12,5 +12,10 @@ CURRENT_VERSION=php${CURRENT_VERSION//.}
 
 sudo brew services stop $CURRENT_VERSION
 brew unlink $CURRENT_VERSION
+
+if ! brew ls --versions $NEW_VERSION > /dev/null; then
+	brew install $NEW_VERSION
+fi
+
 brew link $NEW_VERSION
 valet install
