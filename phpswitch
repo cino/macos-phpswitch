@@ -1,21 +1,31 @@
 #!/bin/bash
 NEW_VERSION=$1
-CURRENT_VERSION=$(php -v | tail -r | tail -n 1 | cut -d " " -f 2 | cut -c 1-3)
+PHP_VERSIONS=(php56 php70 php71 php72)
 
+# Make sure we have a new version to be set.
 if [ -z "${NEW_VERSION}" ]; then
 	echo "Please provide the new php version as the first argument"
 	exit 128
 fi
 
+# Make sure the version is formatted like "php72"
 NEW_VERSION=php${NEW_VERSION//.}
-CURRENT_VERSION=php${CURRENT_VERSION//.}
 
-sudo brew services stop $CURRENT_VERSION
-brew unlink $CURRENT_VERSION
+# Stop and unlink all php versions
+echo "Stopping all php services"
+for PHP_VERSION in "${PHP_VERSIONS[@]}"
+do : 
+	sudo brew services stop $PHP_VERSION 2>/dev/null
+	brew unlink $PHP_VERSION &>/dev/null
+done
 
+# Install new version if not installed or link new version.
 if ! brew ls --versions $NEW_VERSION > /dev/null; then
 	brew install $NEW_VERSION
+else
+	# Link new version and install valet.
+	brew link $NEW_VERSION
 fi
 
-brew link $NEW_VERSION
+# Reload valet with new php version
 valet install
