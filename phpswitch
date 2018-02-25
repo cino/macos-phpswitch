@@ -9,7 +9,11 @@ if [ -z "${NEW_VERSION}" ]; then
 fi
 
 # Make sure the version is formatted like "php72"
+NEW_VERSION=$( echo $NEW_VERSION | awk '{print tolower($0)}')
+NEW_VERSION=${NEW_VERSION#"php"}
 NEW_VERSION=php${NEW_VERSION//.}
+
+echo $NEW_VERSION
 
 # Stop and unlink all php versions
 echo "Stopping all php services"
