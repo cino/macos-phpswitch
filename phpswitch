@@ -8,7 +8,6 @@ if [ -z "${NEW_VERSION}" ]; then
 	exit 128
 fi
 
-
 # Make sure the version is formatted like "php@7.4"
 NEW_VERSION=$( echo $NEW_VERSION | awk '{print tolower($0)}')
 NEW_VERSION=${NEW_VERSION#"php@"}
@@ -16,11 +15,13 @@ NEW_VERSION=php@${NEW_VERSION}
 
 LAST_VERSION=($(printf '%s\n' "${PHP_VERSIONS[@]}" | tail -r))
 
+# Return an error message if an unsupported version has been chosen
 if [[ ! " ${PHP_VERSIONS[@]} " =~ " ${NEW_VERSION} " ]]; then
 	echo "Only the following php versions are supported by Valet: "$(printf "%s " "${PHP_VERSIONS[@]}")
 	exit 128
 fi
 
+# When the last version has been chosen use "php" as version since this is the latest version in brew
 if [[  " ${NEW_VERSION} " =~ " ${LAST_VERSION} " ]]; then
 	NEW_VERSION="php"
 fi
