@@ -1,5 +1,5 @@
 # macos-phpswitch
-Easily switch php version on mac when using brew.
+Easily switch php versions on mac when using brew.
 
 
 **Installation:**
@@ -14,7 +14,7 @@ Make sure ~/.composer/bin is in your path.
 
 ``phpswitch 7.2``
 
-Et voila, it installs php 7.2
+Et voila, it switches to php 7.2
 
 
 **PHP 5.6, 7.0, 7.1 support**
