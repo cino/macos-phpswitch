@@ -1,6 +1,6 @@
 #!/bin/bash
 NEW_VERSION=$1
-PHP_VERSIONS=(php56 php70 php71 php72)
+PHP_VERSIONS=("php@5.6" "php@7.0" "php@7.1" "php@7.2" "php@7.3" "php@7.4")
 
 # Make sure we have a new version to be set.
 if [ -z "${NEW_VERSION}" ]; then
@@ -8,22 +8,34 @@ if [ -z "${NEW_VERSION}" ]; then
 	exit 128
 fi
 
-# Make sure the version is formatted like "php72"
+
+# Make sure the version is formatted like "php@7.4"
 NEW_VERSION=$( echo $NEW_VERSION | awk '{print tolower($0)}')
-NEW_VERSION=${NEW_VERSION#"php"}
-NEW_VERSION=php${NEW_VERSION//.}
+NEW_VERSION=${NEW_VERSION#"php@"}
+NEW_VERSION=php@${NEW_VERSION}
+
+LAST_VERSION=($(printf '%s\n' "${PHP_VERSIONS[@]}" | tail -r))
 
 if [[ ! " ${PHP_VERSIONS[@]} " =~ " ${NEW_VERSION} " ]]; then
 	echo "Only the following php versions are supported by Valet: "$(printf "%s " "${PHP_VERSIONS[@]}")
 	exit 128
 fi
 
+if [[  " ${NEW_VERSION} " =~ " ${LAST_VERSION} " ]]; then
+	NEW_VERSION="php"
+fi
+
+PHP_VERSIONS=("${PHP_VERSIONS[@]}" "php")
+
 # Stop and unlink all php versions
 echo "Stopping all php services"
 for PHP_VERSION in "${PHP_VERSIONS[@]}"
-do : 
+do :
 	sudo brew services stop $PHP_VERSION 2>/dev/null
-	brew unlink $PHP_VERSION &>/dev/null
+	brew unlink --force $PHP_VERSION &>/dev/null
+
+	echo "unlinking"
+	echo $PHP_VERSION
 done
 
 # Install new version if not installed or link new version.
@@ -31,7 +43,7 @@ if ! brew ls --versions $NEW_VERSION > /dev/null; then
 	brew install $NEW_VERSION
 else
 	# Link new version and install valet.
-	brew link $NEW_VERSION
+	brew link --force --overwrite $NEW_VERSION
 fi
 
 # Reload valet with new php version
