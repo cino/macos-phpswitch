@@ -33,9 +33,6 @@ for PHP_VERSION in "${PHP_VERSIONS[@]}"
 do :
 	sudo brew services stop $PHP_VERSION 2>/dev/null
 	brew unlink --force $PHP_VERSION &>/dev/null
-
-	echo "unlinking"
-	echo $PHP_VERSION
 done
 
 # Install new version if not installed or link new version.
