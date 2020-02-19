@@ -1,0 +1,22 @@
+{
+    "name": "cino/macos-phpswitch",
+    "description": "Easily switch between php version MacOS when using Laravel Valet",
+    "keywords": [
+        "macos",
+        "php",
+        "switch",
+        "php-switch",
+        "laravel",
+        "valet"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ricardo Cino",
+            "email": "ricardo@cino.io"
+        }
+    ],
+    "bin": [
+        "phpswitch"
+    ]
+}
